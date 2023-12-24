@@ -51,7 +51,7 @@ class R34RepositoryTest {
         WebClient client = config.client(baseUrl);
 
         mapper = new ObjectMapper();
-        repository = new R34Repository(baseUrl, cdnUrl, client);
+        repository = new R34Repository(baseUrl, cdnUrl, "thumbnail", client);
     }
 
     @AfterAll

@@ -27,7 +27,7 @@ public class R34Config {
         String cdnUrl = "https://r34xyz.b-cdn.net";
         WebClient client = client(baseUrl);
 
-        return new R34Repository(baseUrl, cdnUrl, client);
+        return new R34Repository(baseUrl, cdnUrl, "thumbnailex", client);
     }
 
     /**
@@ -41,7 +41,7 @@ public class R34Config {
         String cdnUrl = "https://anime2.b-cdn.net";
         WebClient client = client(baseUrl);
 
-        return new R34Repository(baseUrl, cdnUrl, client);
+        return new R34Repository(baseUrl, cdnUrl, "thumbnail", client);
     }
 
     /**

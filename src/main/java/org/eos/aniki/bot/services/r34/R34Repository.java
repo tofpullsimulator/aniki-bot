@@ -18,6 +18,7 @@ public class R34Repository implements PostRepository {
 
     private final String baseUrl;
     private final String cdnUrl;
+    private final String thumbnailPrefix;
     private final WebClient client;
 
     /**
@@ -48,6 +49,6 @@ public class R34Repository implements PostRepository {
                 .retrieve()
                 .bodyToMono(R34Response.class)
                 .onErrorResume(it -> Mono.just(R34Response.empty()))
-                .flatMapMany(it -> it.toPosts(baseUrl, cdnUrl));
+                .flatMapMany(it -> it.toPosts(baseUrl, cdnUrl, thumbnailPrefix));
     }
 }

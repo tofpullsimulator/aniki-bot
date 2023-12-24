@@ -88,24 +88,25 @@ public record R34Response(
     /**
      * Convert the <pre>R34Post</pre> to a {@link Post}.
      *
-     * @param baseUrl The base url of the post.
-     * @param cdnUrl  The cnd url of the post.
+     * @param baseUrl         The base url of the post.
+     * @param cdnUrl          The cnd url of the post.
+     * @param thumbnailPrefix The prefix of the thumbnail post.
      * @return A list of converted posts.
      */
-    public Flux<Post> toPosts(final String baseUrl, final String cdnUrl) {
+    public Flux<Post> toPosts(final String baseUrl, final String cdnUrl, final String thumbnailPrefix) {
         return Flux.fromIterable(items).map(it -> {
             int type = it.type();
             Post.PostType postType = type == 1 ? Post.PostType.VIDEO : Post.PostType.IMAGE;
 
             int id = it.id();
             String prefix = String.join("", Arrays.asList(Integer.toString(id).split("")).subList(0, 3));
-            if (Integer.toString(id).length() == 4) {
+            if (Integer.toString(id).length() <= 5) {
                 prefix = String.join("", Arrays.asList(Integer.toString(id).split("")).subList(0, 2));
             }
 
             String mediaUrl = String.format("%s/posts/%s/%d/%d.jpg", cdnUrl, prefix, id, id);
             if (postType == Post.PostType.VIDEO) {
-                mediaUrl = String.format("%s/posts/%s/%d/%d.thumbnail.jpg", cdnUrl, prefix, id, id);
+                mediaUrl = String.format("%s/posts/%s/%d/%d.%s.jpg", cdnUrl, prefix, id, id, thumbnailPrefix);
             }
 
             String title = String.format("ID: %d", id);
