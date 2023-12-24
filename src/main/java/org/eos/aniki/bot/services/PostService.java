@@ -12,6 +12,7 @@ import java.util.stream.Stream;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.discordjson.json.ApplicationCommandOptionChoiceData;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 /**
@@ -25,6 +26,8 @@ public class PostService {
 
     private static final Pattern PATTERN = Pattern.compile(" \\(\\d+\\)");
 
+    @Value("${discord.disallowedTags:}")
+    private final List<String> disallowedTags;
     private final RandomGenerator random;
 
     /**
@@ -66,6 +69,14 @@ public class PostService {
             Matcher matcher = PATTERN.matcher(tag);
             return matcher.replaceAll("");
         }).toArray(String[]::new);
+
+        boolean containsDisallowed = Arrays.stream(clearedTags).anyMatch(disallowedTags::contains);
+        if (containsDisallowed) {
+            String description = getDescription("Used disallowed tags: %s", clearedTags);
+            return EmbedCreateSpec.builder()
+                    .description(description)
+                    .build();
+        }
 
         var results = repository.getPosts(clearedTags).collectList().block();
         //noinspection DataFlowIssue

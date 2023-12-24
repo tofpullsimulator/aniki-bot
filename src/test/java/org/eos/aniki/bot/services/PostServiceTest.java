@@ -16,7 +16,11 @@ import static org.mockito.Mockito.when;
 /**
  * @author Eos
  */
-@SpringBootTest(classes = {PostService.class, ServiceConfig.class})
+@SuppressWarnings("SpringBootApplicationProperties")
+@SpringBootTest(
+        classes = {PostService.class, ServiceConfig.class},
+        properties = {"discord.disallowedTags=furry,genshin impact"}
+)
 class PostServiceTest {
 
     @MockBean
@@ -77,6 +81,14 @@ class PostServiceTest {
         String description = tags.isEmpty() ? "Tags used: none" : "Tags used: nier";
         Assertions.assertEquals(description, result.description().get());
         Assertions.assertEquals("thumbnail", result.thumbnail().get());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"furry", "genshin impact"})
+    void shouldGetNoPostWhenDisallowedTagsAreUsed(final String tags) {
+        var result = service.getRandomPost(repository, tags);
+        String description = "Used disallowed tags: " + tags;
+        Assertions.assertEquals(description, result.description().get());
     }
 
     @ParameterizedTest

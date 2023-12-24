@@ -23,7 +23,7 @@ import reactor.core.publisher.Mono;
 public class SlashCommandListener {
 
     private final List<SlashCommand> commands;
-    @Value("${discord.deniedIds}")
+    @Value("${discord.deniedIds:}")
     private final List<String> deniedIds;
 
     /**
