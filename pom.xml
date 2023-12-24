@@ -12,7 +12,7 @@
 
     <groupId>org.eos.aniki</groupId>
     <artifactId>bot</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
     <name>bot</name>
     <description>Aniki Bot</description>
 
