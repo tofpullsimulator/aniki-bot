@@ -32,6 +32,7 @@ public class R34Repository implements PostRepository {
 
         return request.retrieve()
                 .bodyToFlux(R34Response.R34Tag.class)
+                .onErrorResume(it -> Flux.just(R34Response.R34Tag.empty()))
                 .flatMap(R34Response.R34Tag::toTags);
     }
 
@@ -46,6 +47,7 @@ public class R34Repository implements PostRepository {
                 .body(Mono.just(data), R34Body.class)
                 .retrieve()
                 .bodyToMono(R34Response.class)
+                .onErrorResume(it -> Mono.just(R34Response.empty()))
                 .flatMapMany(it -> it.toPosts(baseUrl, cdnUrl));
     }
 }

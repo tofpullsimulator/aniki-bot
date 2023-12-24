@@ -66,7 +66,7 @@ public class PostService {
      */
     public EmbedCreateSpec getRandomPost(final PostRepository repository, final String... tags) {
         String[] clearedTags = Arrays.stream(tags).map(tag -> {
-            Matcher matcher = PATTERN.matcher(tag);
+            Matcher matcher = PATTERN.matcher(tag.trim());
             return matcher.replaceAll("");
         }).toArray(String[]::new);
 

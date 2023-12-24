@@ -82,6 +82,16 @@ class R34RepositoryTest {
     }
 
     @Test
+    void shouldGetEmptyWhenErrorOccurredWhenGettingTags() {
+        server.enqueue(new MockResponse()
+                .setStatus("500")
+                .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE));
+
+        var mono = repository.getTags("nier");
+        StepVerifier.create(mono).verifyComplete();
+    }
+
+    @Test
     void shouldGetPosts() throws IOException {
         R34Response.R34Post post1 = new R34Response.R34Post("posted1", 1, 0, 1, 1, 1, 1,
                 Collections.emptyMap(), 123456, "created1");
@@ -108,5 +118,15 @@ class R34RepositoryTest {
                     Assertions.assertEquals(Post.PostType.VIDEO, it.type());
                 })
                 .verifyComplete();
+    }
+
+    @Test
+    void shouldGetEmptyWhenErrorOccurredWhenGettingPosts() {
+        server.enqueue(new MockResponse()
+                .setStatus("500")
+                .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE));
+
+        var mono = repository.getPosts("nier: automata");
+        StepVerifier.create(mono).verifyComplete();
     }
 }

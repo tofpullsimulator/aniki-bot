@@ -6,6 +6,7 @@ import org.eos.aniki.bot.services.PostRepository;
 import org.eos.aniki.bot.services.Tag;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 /**
  * Repository to fetch posts and tags via the Gelbooru API service with.
@@ -35,6 +36,7 @@ public class GelbooruRepository implements PostRepository {
                         .build())
                 .retrieve()
                 .bodyToFlux(GelbooruResponse.GelbooruTag.class)
+                .onErrorResume(it -> Flux.just(GelbooruResponse.GelbooruTag.empty()))
                 .flatMap(GelbooruResponse.GelbooruTag::toTags);
     }
 
@@ -51,10 +53,11 @@ public class GelbooruRepository implements PostRepository {
                         .queryParam("json", "1")
                         .queryParam("s", "post")
                         .queryParam("q", "index")
-                        .queryParam("tags", String.join(",", tags))
+                        .queryParam("tags", String.join(" ", tags))
                         .build())
                 .retrieve()
                 .bodyToMono(GelbooruResponse.class)
+                .onErrorResume(it -> Mono.just(GelbooruResponse.empty()))
                 .flatMapMany(GelbooruResponse::toPosts);
     }
 }

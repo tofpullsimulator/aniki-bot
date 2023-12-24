@@ -1,6 +1,7 @@
 package org.eos.aniki.bot.services.r34;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +20,15 @@ public record R34Response(
 ) {
 
     /**
+     * Create an empty <pre>r34Response</pre> instance.
+     *
+     * @return An empty <pre>R34Response</pre> instance.
+     */
+    public static R34Response empty() {
+        return new R34Response(Collections.emptyList(), 0);
+    }
+
+    /**
      * POJO class for the response for a r34.xyz/anime.r34 tag.
      *
      * @author Eos
@@ -32,15 +42,26 @@ public record R34Response(
     ) {
 
         /**
+         * Create an empty <pre>R34Tag</pre> instance.
+         *
+         * @return An empty <pre>R34Tag</pre> instance.
+         */
+        public static R34Tag empty() {
+            return new R34Tag(0, "", 0, 0, 0);
+        }
+
+        /**
          * Convert the <pre>R34Tag</pre> to a {@link Tag}.
          *
          * @return A list of converted tags.
          */
         public Flux<Tag> toTags() {
-            return Flux.just(this).map(it -> {
-                String name = String.format("%s (%d)", it.value(), it.count());
-                return new Tag(name, it.value());
-            });
+            return Flux.just(this)
+                    .filter(it -> !it.equals(empty()))
+                    .map(it -> {
+                        String name = String.format("%s (%d)", it.value(), it.count());
+                        return new Tag(name, it.value());
+                    });
         }
     }
 

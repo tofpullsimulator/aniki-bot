@@ -75,6 +75,16 @@ class Rule34RepositoryTest {
                 .verifyComplete();
     }
 
+    @Test
+    void shouldGetEmptyWhenErrorOccurredWhenGettingTags() {
+        server.enqueue(new MockResponse()
+                .setStatus("500")
+                .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE));
+
+        var mono = repository.getTags("nier");
+        StepVerifier.create(mono).verifyComplete();
+    }
+
     @ParameterizedTest
     @NullAndEmptySource
     void shouldGetTagsWithoutKeywords(final String keywords) {
@@ -107,5 +117,15 @@ class Rule34RepositoryTest {
                     Assertions.assertEquals(Post.PostType.VIDEO, it.type());
                 })
                 .verifyComplete();
+    }
+
+    @Test
+    void shouldGetEmptyWhenErrorOccurredWhenGettingPosts() {
+        server.enqueue(new MockResponse()
+                .setStatus("500")
+                .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE));
+
+        var mono = repository.getPosts("nier: automata");
+        StepVerifier.create(mono).verifyComplete();
     }
 }

@@ -39,6 +39,7 @@ public class Rule34Repository implements PostRepository {
                         .build())
                 .retrieve()
                 .bodyToFlux(Rule34Response.Rule34Tag.class)
+                .onErrorResume(it -> Flux.just(Rule34Response.Rule34Tag.empty()))
                 .flatMap(Rule34Response.Rule34Tag::toTags);
     }
 
@@ -58,10 +59,11 @@ public class Rule34Repository implements PostRepository {
                         .queryParam("json", "1")
                         .queryParam("s", "post")
                         .queryParam("q", "index")
-                        .queryParam("tags", String.join(",", tags))
+                        .queryParam("tags", String.join(" ", tags))
                         .build())
                 .retrieve()
                 .bodyToFlux(Rule34Response.class)
+                .onErrorResume(it -> Flux.just(Rule34Response.empty()))
                 .flatMap(Rule34Response::toPosts);
     }
 }

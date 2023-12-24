@@ -54,6 +54,15 @@ public record Rule34Response(
 ) {
 
     /**
+     * Create an empty <pre>Rule34Response</pre> instance.
+     *
+     * @return An empty <pre>Rule34Response</pre> instance.
+     */
+    public static Rule34Response empty() {
+        return new Rule34Response(0, "", "");
+    }
+
+    /**
      * Wrapper to add default values, except to <pre>id, fileUrl, previewUrl</pre>.
      *
      * @param id         The id for the post.
@@ -79,12 +88,23 @@ public record Rule34Response(
     ) {
 
         /**
+         * Create an empty <pre>Rule34Tag</pre> instance.
+         *
+         * @return An empty <pre>Rule34Tag</pre> instance.
+         */
+        public static Rule34Tag empty() {
+            return new Rule34Tag("", "", "");
+        }
+
+        /**
          * Convert the <pre>Rule34Tag</pre> to a {@link Tag}.
          *
          * @return A list of converted tags.
          */
         public Flux<Tag> toTags() {
-            return Flux.just(this).map(it -> new Tag(it.label(), it.value()));
+            return Flux.just(this)
+                    .filter(it -> !it.equals(empty()))
+                    .map(it -> new Tag(it.label(), it.value()));
         }
     }
 
@@ -94,19 +114,21 @@ public record Rule34Response(
      * @return A list of converted posts.
      */
     public Flux<Post> toPosts() {
-        return Flux.just(this).map(it -> {
-            Post.PostType postType = it.fileUrl().endsWith(".mp4") ? Post.PostType.VIDEO : Post.PostType.IMAGE;
+        return Flux.just(this)
+                .filter(it -> !it.equals(empty()))
+                .map(it -> {
+                    Post.PostType postType = it.fileUrl().endsWith(".mp4") ? Post.PostType.VIDEO : Post.PostType.IMAGE;
 
-            String mediaUrl = it.fileUrl();
-            if (postType == Post.PostType.VIDEO) {
-                mediaUrl = it.previewUrl();
-            }
+                    String mediaUrl = it.fileUrl();
+                    if (postType == Post.PostType.VIDEO) {
+                        mediaUrl = it.previewUrl();
+                    }
 
-            int id = it.id();
-            String title = String.format("ID: %d", id);
-            String url = String.format("https://rule34.xxx/index.php?page=post&s=view&id=%s", id);
+                    int id = it.id();
+                    String title = String.format("ID: %d", id);
+                    String url = String.format("https://rule34.xxx/index.php?page=post&s=view&id=%s", id);
 
-            return new Post(title, url, mediaUrl, postType);
-        });
+                    return new Post(title, url, mediaUrl, postType);
+                });
     }
 }

@@ -1,5 +1,6 @@
 package org.eos.aniki.bot.services.gelbooru;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -15,6 +16,15 @@ import reactor.core.publisher.Flux;
 public record GelbooruResponse(
         List<GelbooruPost> post
 ) {
+
+    /**
+     * Create an empty <pre>GelbooruResponse</pre> instance.
+     *
+     * @return An empty <pre>GelbooruResponse</pre> instance.
+     */
+    public static GelbooruResponse empty() {
+        return new GelbooruResponse(Collections.emptyList());
+    }
 
     /**
      * POJO class for the response for a Gelbooru tag.
@@ -35,15 +45,26 @@ public record GelbooruResponse(
     ) {
 
         /**
+         * Create an empty <pre>GelbooruTag</pre> instance.
+         *
+         * @return An empty <pre>GelbooruTag</pre> instance.
+         */
+        public static GelbooruTag empty() {
+            return new GelbooruTag("", "", "", "", "");
+        }
+
+        /**
          * Convert the <pre>GelbooruTag</pre> to a {@link Tag}.
          *
          * @return A list of converted tags.
          */
         public Flux<Tag> toTags() {
-            return Flux.just(this).map(it -> {
-                String name = String.format("%s (%s)", it.label(), it.postCount());
-                return new Tag(name, it.value());
-            });
+            return Flux.just(this)
+                    .filter(it -> !it.equals(empty()))
+                    .map(it -> {
+                        String name = String.format("%s (%s)", it.label(), it.postCount());
+                        return new Tag(name, it.value());
+                    });
         }
     }
 
