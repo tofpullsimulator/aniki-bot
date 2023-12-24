@@ -18,7 +18,9 @@ Use the provided maven wrapper to build the project.
 There are a couple of maven profiles to note:
 
  - `coverage`: Run unit tests with the JaCoCo coverage plugin.
+ - `dependency-check`: Run OWASP security scan on dependencies.
  - `integration-tests`: Runs specific unit tests tagged with the `integration-tests` tags
+ - `rewrite`: Enforces code style using OpenRewrite.
 
 ## Usage
 
