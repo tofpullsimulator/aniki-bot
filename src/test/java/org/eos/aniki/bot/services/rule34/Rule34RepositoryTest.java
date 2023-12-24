@@ -109,4 +109,3 @@ class Rule34RepositoryTest {
                 .verifyComplete();
     }
 }
-

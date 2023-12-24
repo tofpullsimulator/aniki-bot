@@ -37,6 +37,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+/**
+ * @author Eos
+ */
 @SpringBootTest(classes = {SlashCommand.class, ServiceConfig.class})
 class SlashCommandTest {
 
