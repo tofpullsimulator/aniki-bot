@@ -1,0 +1,20 @@
+{
+  "name": "aniki",
+  "description": "aniki",
+  "options": [
+    {
+      "name": "tags",
+      "description": "Tag(s) for fetching the image",
+      "type": 3,
+      "required": false,
+      "autocomplete": true
+    },
+    {
+      "name": "source",
+      "description": "Source for fetching images from",
+      "type": 3,
+      "required": false,
+      "autocomplete": true
+    }
+  ]
+}

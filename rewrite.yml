@@ -1,0 +1,22 @@
+---
+type: specs.openrewrite.org/v1beta/style
+name: org.eos.aniki.bot.Style
+styleConfigs:
+  - org.openrewrite.java.style.TabsAndIndentsStyle:
+      useTabCharacter: false
+      tabSize: 4
+      indentSize: 4
+      continuationIndent: 8
+      indentsRelativeToExpressionStart: false
+      methodDeclarationParameters:
+        alignWhenMultiple: true
+  - org.openrewrite.java.style.ImportLayoutStyle:
+      classCountToUseStarImport: 9999
+      nameCountToUseStarImport: 9999
+      layout:
+        - import java.*
+        - import javax.*
+        - <blank line>
+        - import all other imports
+        - <blank line>
+        - import static all other imports
